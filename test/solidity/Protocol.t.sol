@@ -59,7 +59,7 @@ contract ProtocolTest is Test {
       market.initialize(MAX_FUTURE_POOLS, 2e18, irm, PENALTY_RATE, 1e17, RESERVE_FACTOR, 0.0046e18, 0.42e18);
       vm.label(address(market), string.concat("Market", i.toString()));
       MockPriceFeed priceFeed = new MockPriceFeed(18, 1e18);
-      // market.setTreasury(address(this), 0.1e18);
+      market.setTreasury(address(this), 0.1e18);
       auditor.enableMarket(market, priceFeed, 0.9e18, 18);
 
       asset.approve(address(market), type(uint256).max);
@@ -236,6 +236,10 @@ contract ProtocolTest is Test {
     } else if (assets > backupAssets + supplied || (borrowed + assets).divWadUp(backupAssets + supplied) > 1e18) {
       vm.expectRevert(UtilizationExceeded.selector);
     } else if (
+      backupDebtAddition > 0 && market.treasuryFeeRate() > 0 && previewFloatingUtilizationExceeded(market, 0, 0)
+    ) {
+      vm.expectRevert(UtilizationExceeded.selector);
+    } else if (
       backupDebtAddition > 0 &&
       market.floatingBackupBorrowed() + backupDebtAddition + market.totalFloatingBorrowAssets() >
       (market.floatingAssets() + previewNewFloatingDebt(market)).mulWadDown(1e18 - RESERVE_FACTOR)
@@ -259,6 +263,29 @@ contract ProtocolTest is Test {
     market.borrowAtMaturity(maturity, assets, type(uint256).max, account, account);
   }
 
+  function previewFloatingUtilizationExceeded(
+    Market market,
+    uint256 assets,
+    uint256 accumulatedEarnings
+  ) internal returns (bool) {
+    uint256 newFloatingUtilization = market.floatingAssets() > 0
+      ? market.floatingDebt().divWadUp(market.floatingAssets())
+      : 0;
+    uint256 newDebt = market.floatingDebt().mulWadDown(
+      market.interestRateModel().floatingBorrowRate(market.floatingUtilization(), newFloatingUtilization).mulDivDown(
+        block.timestamp - market.lastFloatingDebtUpdate(),
+        365 days
+      )
+    );
+    uint256 floatingAssets = market.floatingAssets() +
+      accumulatedEarnings +
+      assets +
+      newDebt -
+      newDebt.mulWadDown(market.treasuryFeeRate());
+    uint256 floatingDebt = market.floatingDebt() + newDebt;
+    return (floatingAssets > 0 ? floatingDebt.divWadUp(floatingAssets) : 0) > 1e18;
+  }
+
   function deposit(uint256 i, uint256 assets) internal {
     Market market = markets[(i / 2) % markets.length];
     uint256 shareValue = market.totalSupply() > 0 ? market.previewMint(1e18) : 0;
@@ -270,7 +297,12 @@ contract ProtocolTest is Test {
     uint256 expectedShares = market.convertToShares(assets);
 
     if (expectedShares == 0) vm.expectRevert("ZERO_SHARES");
-    else {
+    else if (
+      market.treasuryFeeRate() > 0 &&
+      previewFloatingUtilizationExceeded(market, assets, previewAccumulatedEarnings(market))
+    ) {
+      vm.expectRevert(UtilizationExceeded.selector);
+    } else {
       vm.expectEmit(true, true, true, true, address(market));
       emit Deposit(account, account, assets, expectedShares);
     }
@@ -339,7 +371,9 @@ contract ProtocolTest is Test {
     uint256 expectedShares = market.previewBorrow(assets);
     (uint256 collateral, uint256 debt) = previewAccountLiquidity(account, market, assets, expectedShares);
 
-    if (
+    if (market.treasuryFeeRate() > 0 && previewFloatingUtilizationExceeded(market, 0, 0)) {
+      vm.expectRevert(UtilizationExceeded.selector);
+    } else if (
       market.floatingBackupBorrowed() + market.totalFloatingBorrowAssets() + assets >
       (market.floatingAssets() + previewNewFloatingDebt(market)).mulWadDown(1e18 - RESERVE_FACTOR)
     ) {
@@ -443,6 +477,8 @@ contract ProtocolTest is Test {
       vm.expectRevert(bytes(""));
     } else if (expectedAssets > market.floatingAssets() + previewNewFloatingDebt(market) + earnings) {
       vm.expectRevert(stdError.arithmeticError);
+    } else if (market.treasuryFeeRate() > 0 && previewFloatingUtilizationExceeded(market, 0, 0)) {
+      vm.expectRevert(UtilizationExceeded.selector);
     } else if (
       market.floatingBackupBorrowed() + market.totalFloatingBorrowAssets() >
       market.floatingAssets() + previewNewFloatingDebt(market) + earnings - expectedAssets
@@ -501,6 +537,8 @@ contract ProtocolTest is Test {
       vm.expectRevert(ZeroRepay.selector);
     } else if ((auditor.accountMarkets(BOB) & (1 << index)) == 0) {
       vm.expectRevert(bytes(""));
+    } else if (market.treasuryFeeRate() > 0 && previewFloatingUtilizationExceeded(market, 0, 0)) {
+      vm.expectRevert(UtilizationExceeded.selector);
     } else if (market.previewDebt(BOB) == 0) {
       vm.expectRevert(ZeroWithdraw.selector);
     } else {
@@ -643,8 +681,7 @@ contract ProtocolTest is Test {
       uint256 totalAssets = market.floatingAssets() +
         backupEarnings +
         previewAccumulatedEarnings(market) +
-        market.totalFloatingBorrowAssets() -
-        market.floatingDebt();
+        (market.totalFloatingBorrowAssets() - market.floatingDebt()).mulWadDown(1e18 - market.treasuryFeeRate());
       uint256 assets = market.floatingAssets() -
         market.floatingDebt() +
         market.earningsAccumulator() +
