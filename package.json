@@ -29,6 +29,8 @@
   "files": [
     "contracts",
     "deployments",
+    "scripts",
+    "foundry.toml",
     "hardhat.config.ts"
   ],
   "engines": {
