@@ -3,6 +3,7 @@ name = "exactly"
 version = "0.0.0"
 description = ""
 authors = []
+packages = [{ include = "pyproject.toml" }]
 
 [tool.poetry.dependencies]
 python = "^3.8"
