@@ -612,6 +612,12 @@ describe("ETHMarket - receive bare ETH instead of WETH", function () {
     });
   });
 
+  describe("GIVEN a regular account", () => {
+    it("WHEN trying to call initialize, THEN the transaction should revert", async () => {
+      await expect(routerETH.initialize()).to.be.revertedWithoutReason();
+    });
+  });
+
   describe("slippage control", () => {
     let tx: Promise<ContractTransaction>;
     beforeEach(async () => {
