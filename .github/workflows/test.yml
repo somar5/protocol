@@ -15,9 +15,10 @@ jobs:
         with:
           node-version: 18
           cache: yarn
-      - run: export FOUNDRY_DIR=$HOME/.local && curl -L https://foundry.paradigm.xyz | bash && foundryup
       - run: yarn
       - run: yarn lint
+      - run: export FOUNDRY_DIR=$HOME/.local && curl -L https://foundry.paradigm.xyz | bash && foundryup -r exactly/foundry
+      - run: yarn postinstall:foundry
       - run: yarn coverage
       - uses: codecov/codecov-action@v3
         with:
