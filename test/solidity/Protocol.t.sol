@@ -60,7 +60,7 @@ contract ProtocolTest is Test {
     auditor = Auditor(address(new ERC1967Proxy(address(new Auditor(18)), "")));
     auditor.initialize(Auditor.LiquidationIncentive(0.09e18, 0.01e18));
     vm.label(address(auditor), "Auditor");
-    InterestRateModel irm = new InterestRateModel(0.023e18, -0.0025e18, 1.02e18, 0.023e18, -0.0025e18, 1.02e18);
+    InterestRateModel irm = new InterestRateModel(Market(address(0)), 0.023e18, -0.0025e18, 1.02e18, 7e17);
 
     accounts.push(BOB);
     accounts.push(ALICE);
@@ -957,14 +957,11 @@ contract ProtocolTest is Test {
   function previewTotalFloatingBorrowAssets(Market market) internal view returns (uint256) {
     uint256 memFloatingAssets = market.floatingAssets();
     uint256 memFloatingDebt = market.floatingDebt();
-    uint256 floatingUtilization = memFloatingAssets > 0
-      ? Math.min(memFloatingDebt.divWadUp(memFloatingAssets), 1e18)
-      : 0;
     uint256 newDebt = memFloatingDebt.mulWadDown(
-      market.interestRateModel().floatingRate(floatingUtilization).mulDivDown(
-        block.timestamp - market.lastFloatingDebtUpdate(),
-        365 days
-      )
+      market
+        .interestRateModel()
+        .floatingRate(memFloatingAssets, memFloatingDebt, market.floatingBackupBorrowed())
+        .mulDivDown(block.timestamp - market.lastFloatingDebtUpdate(), 365 days)
     );
     return memFloatingDebt + newDebt;
   }
@@ -984,12 +981,12 @@ contract ProtocolTest is Test {
     InterestRateModel memIRM = market.interestRateModel();
     uint256 memFloatingDebt = market.floatingDebt();
     uint256 memFloatingAssets = market.floatingAssets();
-    uint256 floatingUtilization = memFloatingAssets > 0
-      ? Math.min(memFloatingDebt.divWadUp(memFloatingAssets), 1e18)
-      : 0;
     return
       memFloatingDebt.mulWadDown(
-        memIRM.floatingRate(floatingUtilization).mulDivDown(block.timestamp - market.lastFloatingDebtUpdate(), 365 days)
+        memIRM.floatingRate(memFloatingAssets, memFloatingDebt, market.floatingBackupBorrowed()).mulDivDown(
+          block.timestamp - market.lastFloatingDebtUpdate(),
+          365 days
+        )
       );
   }
 

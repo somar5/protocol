@@ -44,7 +44,7 @@ contract PreviewerTest is Test {
     auditor.initialize(Auditor.LiquidationIncentive(0.09e18, 0.01e18));
     vm.label(address(auditor), "Auditor");
 
-    irm = new InterestRateModel(0.72e18, -0.22e18, 1.1e18, 0.72e18, -0.22e18, 1.1e18);
+    irm = new InterestRateModel(Market(address(0)), 0.72e18, -0.22e18, 1.1e18, 7e17);
 
     market = Market(address(new ERC1967Proxy(address(new Market(asset, auditor)), "")));
     market.initialize(12, 1e18, irm, 0.02e18 / uint256(1 days), 0.1e18, 0, 0.0046e18, 0.42e18);
@@ -627,7 +627,7 @@ contract PreviewerTest is Test {
       10 ** opPriceFeed.decimals()
     );
     uint256 annualRewardValue = newDepositRewardsValue.mulDivDown(365 days, deltaTime);
-    assertApproxEqAbs(data[0].rewardRates[0].floatingDeposit, annualRewardValue.mulDivDown(1e18, depositAmount), 4e15);
+    assertApproxEqAbs(data[0].rewardRates[0].floatingDeposit, annualRewardValue.mulDivDown(1e18, depositAmount), 7e15);
 
     uint256 newFloatingBorrowRewards = 238622379993700;
     uint256 newFloatingBorrowRewardsValue = newFloatingBorrowRewards.mulDivDown(
@@ -962,7 +962,7 @@ contract PreviewerTest is Test {
     market.deposit(100 ether, address(this));
     market.borrow(64 ether, address(this), address(this));
     Previewer.MarketAccount[] memory exactly = previewer.exactly(address(this));
-    assertEq(exactly[0].floatingBorrowRate, 1345217391304347826);
+    assertEq(exactly[0].floatingBorrowRate, 1121014492753623186);
     assertEq(exactly[0].floatingUtilization, 0.64e18);
   }
 
@@ -1222,12 +1222,10 @@ contract PreviewerTest is Test {
     Previewer.MarketAccount[] memory data = previewer.exactly(address(this));
 
     assertEq(data[0].interestRateModel.id, address(irm));
-    assertEq(data[0].interestRateModel.fixedCurveA, irm.fixedCurveA());
-    assertEq(data[0].interestRateModel.fixedCurveB, irm.fixedCurveB());
-    assertEq(data[0].interestRateModel.fixedMaxUtilization, irm.fixedMaxUtilization());
-    assertEq(data[0].interestRateModel.floatingCurveA, irm.floatingCurveA());
-    assertEq(data[0].interestRateModel.floatingCurveB, irm.floatingCurveB());
-    assertEq(data[0].interestRateModel.floatingMaxUtilization, irm.floatingMaxUtilization());
+    assertEq(data[0].interestRateModel.curveA, irm.curveA());
+    assertEq(data[0].interestRateModel.curveB, irm.curveB());
+    assertEq(data[0].interestRateModel.maxUtilization, irm.maxUtilization());
+    assertEq(data[0].interestRateModel.naturalUtilization, irm.naturalUtilization());
   }
 
   function testMaxBorrowAssetsCapacity() external {

@@ -886,9 +886,11 @@ contract Market is Initializable, AccessControlUpgradeable, PausableUpgradeable,
   function updateFloatingDebt() internal returns (uint256 treasuryFee) {
     uint256 memFloatingDebt = floatingDebt;
     uint256 memFloatingAssets = floatingAssets;
-    uint256 floatingUtilization = memFloatingAssets > 0 ? memFloatingDebt.divWadUp(memFloatingAssets) : 0;
     uint256 newDebt = memFloatingDebt.mulWadDown(
-      interestRateModel.floatingRate(floatingUtilization).mulDivDown(block.timestamp - lastFloatingDebtUpdate, 365 days)
+      interestRateModel.floatingRate(memFloatingAssets, memFloatingDebt, floatingBackupBorrowed).mulDivDown(
+        block.timestamp - lastFloatingDebtUpdate,
+        365 days
+      )
     );
 
     memFloatingDebt += newDebt;
@@ -896,17 +898,18 @@ contract Market is Initializable, AccessControlUpgradeable, PausableUpgradeable,
     floatingAssets = memFloatingAssets + newDebt - treasuryFee;
     floatingDebt = memFloatingDebt;
     lastFloatingDebtUpdate = uint32(block.timestamp);
-    emit FloatingDebtUpdate(block.timestamp, floatingUtilization);
+    emit FloatingDebtUpdate(block.timestamp, memFloatingAssets > 0 ? memFloatingDebt.divWadUp(memFloatingAssets) : 0);
   }
 
   /// @notice Calculates the total floating debt, considering elapsed time since last update and current interest rate.
   /// @return actual floating debt plus projected interest.
   function totalFloatingBorrowAssets() public view returns (uint256) {
     uint256 memFloatingDebt = floatingDebt;
-    uint256 memFloatingAssets = floatingAssets;
-    uint256 floatingUtilization = memFloatingAssets > 0 ? memFloatingDebt.divWadUp(memFloatingAssets) : 0;
     uint256 newDebt = memFloatingDebt.mulWadDown(
-      interestRateModel.floatingRate(floatingUtilization).mulDivDown(block.timestamp - lastFloatingDebtUpdate, 365 days)
+      interestRateModel.floatingRate(floatingAssets, memFloatingDebt, floatingBackupBorrowed).mulDivDown(
+        block.timestamp - lastFloatingDebtUpdate,
+        365 days
+      )
     );
     return memFloatingDebt + newDebt;
   }

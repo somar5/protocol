@@ -41,24 +41,6 @@ const func: DeployFunction = async ({
   const treasuryFeeRate = parseUnits(String(finance.treasuryFeeRate ?? 0));
 
   for (const [symbol, config] of Object.entries(finance.markets)) {
-    const { address: interestRateModel } = await tenderlify(
-      "InterestRateModel",
-      await deploy(`InterestRateModel${symbol}`, {
-        skipIfAlreadyDeployed: !JSON.parse(env[`DEPLOY_IRM_${symbol}`] ?? "false"),
-        contract: "InterestRateModel",
-        args: [
-          parseUnits(String(config.fixedCurve.a)),
-          parseUnits(String(config.fixedCurve.b)),
-          parseUnits(String(config.fixedCurve.maxUtilization)),
-          parseUnits(String(config.floatingCurve.a)),
-          parseUnits(String(config.floatingCurve.b)),
-          parseUnits(String(config.floatingCurve.maxUtilization)),
-        ],
-        from: deployer,
-        log: true,
-      }),
-    );
-
     const asset = await getContract<ERC20>(symbol);
     const marketName = `Market${symbol}`;
     await validateUpgrade(
@@ -82,7 +64,7 @@ const func: DeployFunction = async ({
                 args: [
                   finance.futurePools,
                   earningsAccumulatorSmoothFactor,
-                  interestRateModel,
+                  AddressZero,
                   penaltyRate,
                   backupFeeRate,
                   reserveFactor,
@@ -98,6 +80,23 @@ const func: DeployFunction = async ({
     );
 
     const market = await getContract<Market>(marketName, await getSigner(deployer));
+
+    const { address: interestRateModel } = await tenderlify(
+      "InterestRateModel",
+      await deploy(`InterestRateModel${symbol}`, {
+        skipIfAlreadyDeployed: !JSON.parse(env[`DEPLOY_IRM_${symbol}`] ?? "false"),
+        contract: "InterestRateModel",
+        args: [
+          market.address,
+          parseUnits(String(config.curve.a)),
+          parseUnits(String(config.curve.b)),
+          parseUnits(String(config.curve.maxUtilization)),
+          parseUnits(String(config.curve.naturalUtilization)),
+        ],
+        from: deployer,
+        log: true,
+      }),
+    );
 
     if (symbol === "WETH") {
       await validateUpgrade("MarketETHRouter", { args: [market.address], envKey: "ROUTER" }, async (name, opts) =>

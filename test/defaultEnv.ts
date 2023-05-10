@@ -20,6 +20,7 @@ import type {
 } from "../types";
 
 const {
+  constants: { AddressZero },
   utils: { parseUnits },
   getContractFactory,
   getNamedSigner,
@@ -100,12 +101,11 @@ export class DefaultEnv {
     const InterestRateModelFactory = (await getContractFactory("InterestRateModel")) as InterestRateModel__factory;
 
     const realInterestRateModel = await InterestRateModelFactory.deploy(
+      AddressZero,
       parseUnits("0.0495"),
       parseUnits("-0.025"),
       parseUnits("1.1"),
-      parseUnits("0.0495"),
-      parseUnits("-0.025"),
-      parseUnits("1.1"),
+      parseUnits("0.7"),
     );
 
     const interestRateModel = config?.useRealInterestRateModel
@@ -294,15 +294,9 @@ export class DefaultEnv {
     await (this.interestRateModel.connect(this.currentWallet) as MockInterestRateModel).setBorrowRate(parseUnits(rate));
   }
 
-  public async setFixedParameters(a: BigNumber, b: BigNumber, maxU: BigNumber) {
+  public async setIRMParameters(a: BigNumber, b: BigNumber, maxU: BigNumber, natU: BigNumber) {
     const irmFactory = (await getContractFactory("InterestRateModel")) as InterestRateModel__factory;
-    const irm = this.interestRateModel as InterestRateModel;
-    const newIRM = await irmFactory.deploy(
-      a,
-      b,
-      maxU,
-      ...(await Promise.all([irm.floatingCurveA(), irm.floatingCurveB(), irm.floatingMaxUtilization()])),
-    );
+    const newIRM = await irmFactory.deploy(AddressZero, a, b, maxU, natU);
 
     this.interestRateModel = newIRM;
     for (const market of Object.values(this.marketContracts)) await market.setInterestRateModel(newIRM.address);
