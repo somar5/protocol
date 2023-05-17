@@ -461,8 +461,9 @@ contract RewardsController is Initializable, AccessControlUpgradeable {
     uint256 deltaTime
   ) internal view returns (uint256 borrowIndex, uint256 depositIndex, uint256 newUndistributed) {
     TotalMarketBalance memory m;
-    m.debt = market.totalFloatingBorrowAssets();
-    m.supply = market.totalAssets();
+    m.floatingDebt = market.floatingDebt();
+    m.floatingAssets = market.floatingAssets();
+    m.backupBorrowed = market.floatingBackupBorrowed();
     TimeVars memory t;
     t.start = rewardData.start;
     t.end = rewardData.end;
@@ -473,14 +474,13 @@ contract RewardsController is Initializable, AccessControlUpgradeable {
         (FixedLib.INTERVAL * market.maxFuturePools());
       uint256 fixedDebt;
       for (uint256 maturity = firstMaturity; maturity <= maxMaturity; ) {
-        (uint256 borrowed, uint256 supplied) = market.fixedPoolBalance(maturity);
+        (uint256 borrowed, ) = market.fixedPoolBalance(maturity);
         fixedDebt += borrowed;
-        m.supply += supplied;
         unchecked {
           maturity += FixedLib.INTERVAL;
         }
       }
-      m.debt += fixedDebt;
+      m.debt = m.floatingDebt + fixedDebt;
       m.fixedBorrowShares = market.previewRepay(fixedDebt);
     }
     uint256 target;
@@ -530,7 +530,7 @@ contract RewardsController is Initializable, AccessControlUpgradeable {
     }
     {
       AllocationVars memory v;
-      v.utilization = m.supply > 0 ? Math.min(m.debt.divWadDown(m.supply), UTILIZATION_CAP) : 0;
+      v.utilization = m.floatingAssets > 0 ? Math.min(m.floatingDebt.divWadDown(m.floatingAssets), UTILIZATION_CAP) : 0;
       v.transitionFactor = rewardData.transitionFactor;
       v.flipSpeed = rewardData.flipSpeed;
       v.borrowAllocationWeightFactor = rewardData.borrowAllocationWeightFactor;
@@ -701,8 +701,10 @@ contract RewardsController is Initializable, AccessControlUpgradeable {
 
   struct TotalMarketBalance {
     uint256 debt;
-    uint256 supply;
     uint256 fixedBorrowShares;
+    uint256 backupBorrowed;
+    uint256 floatingDebt;
+    uint256 floatingAssets;
   }
 
   struct TimeVars {
