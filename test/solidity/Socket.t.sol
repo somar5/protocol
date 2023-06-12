@@ -8,6 +8,7 @@ import {
   DebtManager,
   Market,
   ERC20,
+  Permit,
   Auditor,
   IPermit2,
   IBalancerVault
@@ -57,8 +58,48 @@ contract SocketTest is ForkTest {
     assertEq(marketUSDC.maxWithdraw(bob), ASSETS - 1);
   }
 
+  function testSocketLeverage() external {
+    usdc.approve(address(debtManager), ASSETS);
+
+    (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+      BOB_KEY,
+      keccak256(
+        abi.encodePacked(
+          "\x19\x01",
+          marketUSDC.DOMAIN_SEPARATOR(),
+          keccak256(
+            abi.encode(
+              keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"),
+              bob,
+              debtManager,
+              ASSETS * 2,
+              marketUSDC.nonces(bob),
+              block.timestamp
+            )
+          )
+        )
+      )
+    );
+
+    socketCall(
+      address(debtManager),
+      abi.encodeCall(ILeverage.leverage, (marketUSDC, ASSETS, 2e18, ASSETS * 2, Permit(bob, block.timestamp, v, r, s)))
+    );
+    assertEq(marketUSDC.maxWithdraw(bob), ASSETS * 3 - 2);
+  }
+
   function socketCall(address target, bytes memory payload) internal {
     target.functionCall(payload, "");
     assertEq(usdc.balanceOf(address(this)), 0);
   }
+}
+
+interface ILeverage {
+  function leverage(
+    Market market,
+    uint256 deposit,
+    uint256 multiplier,
+    uint256 borrowAssets,
+    Permit calldata marketPermit
+  ) external;
 }
