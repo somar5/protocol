@@ -64,23 +64,23 @@ contract DebtManager is Initializable {
     }
   }
 
-  /// @notice Leverages the floating position of `_msgSender` a certain `multiplier` by taking a flash loan
+  /// @notice Leverages the floating position of `_msgSender` a certain `ratio` by taking a flash loan
   /// from Balancer's vault.
   /// @param market The Market to leverage the position in.
   /// @param deposit The amount of assets to deposit.
-  /// @param multiplier The number of times that the current principal will be leveraged, represented with 18 decimals.
-  function leverage(Market market, uint256 deposit, uint256 multiplier) public msgSender {
+  /// @param ratio The number of times that the current principal will be leveraged, represented with 18 decimals.
+  function leverage(Market market, uint256 deposit, uint256 ratio) public msgSender {
     if (deposit != 0) market.asset().safeTransferFrom(_msgSender, address(this), deposit);
 
-    noTransferLeverage(market, deposit, multiplier);
+    noTransferLeverage(market, deposit, ratio);
   }
 
-  /// @notice Leverages the floating position of `_msgSender` a certain `multiplier` by taking a flash loan
+  /// @notice Leverages the floating position of `_msgSender` a certain `ratio` by taking a flash loan
   /// from Balancer's vault.
   /// @param market The Market to leverage the position in.
   /// @param deposit The amount of assets to deposit.
-  /// @param multiplier The number of times that the current principal will be leveraged, represented with 18 decimals.
-  function noTransferLeverage(Market market, uint256 deposit, uint256 multiplier) internal {
+  /// @param ratio The number of times that the current principal will be leveraged, represented with 18 decimals.
+  function noTransferLeverage(Market market, uint256 deposit, uint256 ratio) internal {
     uint256[] memory amounts = new uint256[](1);
     ERC20[] memory tokens = new ERC20[](1);
     tokens[0] = market.asset();
@@ -89,7 +89,7 @@ contract DebtManager is Initializable {
     uint256 loopCount;
     {
       (uint256 collateral, uint256 debt) = market.accountSnapshot(sender);
-      uint256 amount = (collateral + deposit - debt).mulWadDown(multiplier);
+      uint256 amount = (collateral + deposit - debt).mulWadDown(ratio - 1e18);
       loopCount = amount.mulDivUp(1, tokens[0].balanceOf(address(balancerVault)));
       amounts[0] = amount.mulDivUp(1, loopCount);
     }
