@@ -34,23 +34,18 @@ contract DebtManager is Initializable {
   /// @notice Factory contract to be used to compute the address of the Uniswap V3 pool.
   /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
   address public immutable uniswapV3Factory;
-  /// @notice Quoter contract to be used to preview the amount of assets to be swapped.
-  /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
-  IUniswapQuoter public immutable uniswapV3Quoter;
 
   /// @custom:oz-upgrades-unsafe-allow constructor
   constructor(
     Auditor auditor_,
     IPermit2 permit2_,
     IBalancerVault balancerVault_,
-    address uniswapV3Factory_,
-    IUniswapQuoter uniswapV3Quoter_
+    address uniswapV3Factory_
   ) {
     auditor = auditor_;
     permit2 = permit2_;
     balancerVault = balancerVault_;
     uniswapV3Factory = uniswapV3Factory_;
-    uniswapV3Quoter = uniswapV3Quoter_;
 
     _disableInitializers();
   }
@@ -571,33 +566,6 @@ contract DebtManager is Initializable {
     _;
   }
 
-  /// @notice Leverages the floating position of `_msgSender` a certain `multiplier` by taking a flash loan
-  /// from Balancer's vault.
-  /// @param market The Market to leverage the position in.
-  /// @param deposit The amount of assets to deposit.
-  /// @param multiplier The number of times that the current principal will be leveraged, represented with 18 decimals.
-  function leverage(
-    Market market,
-    uint256 deposit,
-    uint256 multiplier,
-    uint256 borrowAssets,
-    Permit calldata marketPermit,
-    Permit2 calldata assetPermit
-  ) external permit(market, borrowAssets, marketPermit) permitTransfer(market.asset(), deposit, assetPermit) msgSender {
-    noTransferLeverage(market, deposit, multiplier);
-  }
-
-  function leverage(
-    Market market,
-    uint256 deposit,
-    uint256 multiplier,
-    uint256 borrowAssets,
-    Permit calldata marketPermit,
-    Permit calldata assetPermit
-  ) external permit(market, borrowAssets, marketPermit) permit(market.asset(), deposit, assetPermit) {
-    leverage(market, deposit, multiplier);
-  }
-
   function leverage(
     Market market,
     uint256 deposit,
@@ -607,31 +575,6 @@ contract DebtManager is Initializable {
   ) external permit(market, borrowAssets, marketPermit) msgSender {
     market.asset().transferFrom(msg.sender, address(this), deposit);
     noTransferLeverage(market, deposit, multiplier);
-  }
-
-  /// @notice Cross-leverages the floating position of `_msgSender` a certain `multiplier` by taking a flash swap
-  /// from Uniswap's pool.
-  /// @param marketIn The Market to deposit the leveraged position.
-  /// @param marketOut The Market to borrow the leveraged position.
-  /// @param fee The fee of the pool that will be used to swap the assets.
-  /// @param deposit The amount of `marketIn` underlying assets to deposit.
-  /// @param multiplier The number of times that the current principal will be leveraged, represented with 18 decimals.
-  function crossLeverage(
-    Market marketIn,
-    Market marketOut,
-    uint24 fee,
-    uint256 deposit,
-    uint256 multiplier,
-    uint256 borrowAssets,
-    Permit calldata marketPermit,
-    Permit2 calldata assetPermit
-  )
-    external
-    permit(marketOut, borrowAssets, marketPermit)
-    permitTransfer(marketIn.asset(), deposit, assetPermit)
-    msgSender
-  {
-    noTransferCrossLeverage(marketIn, marketOut, fee, deposit, multiplier);
   }
 
   /// @notice Deleverages a `percentage` position of `_msgSender` by taking a flash swap from Uniswap's pool.
@@ -731,23 +674,6 @@ contract DebtManager is Initializable {
     Permit calldata p
   ) external permit(market, maxBorrowAssets, p) {
     rollFixed(market, repayMaturity, borrowMaturity, maxRepayAssets, maxBorrowAssets, percentage);
-  }
-
-  /// @notice Returns the output received for a given exact amount of a single pool swap.
-  /// @param assetIn The address of the token to be swapped.
-  /// @param assetOut The address of the token to receive.
-  /// @param amountIn The exact amount of `assetIn` to be swapped.
-  /// @param fee The fee of the pool that will be used to swap the assets.
-  /// @return amountOut The amount of `assetOut` received.
-  function previewSwap(address assetIn, address assetOut, uint256 amountIn, uint24 fee) external returns (uint256) {
-    return
-      uniswapV3Quoter.quoteExactInputSingle(
-        assetIn,
-        assetOut,
-        fee,
-        amountIn,
-        assetIn == PoolAddress.getPoolKey(assetIn, assetOut, fee).token0 ? MIN_SQRT_RATIO + 1 : MAX_SQRT_RATIO - 1
-      );
   }
 
   /// @notice Returns Balancer Vault's available liquidity of each enabled underlying asset.

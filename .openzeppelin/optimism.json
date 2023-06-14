@@ -50,6 +50,11 @@
       "address": "0xb27113B72135942065E0Fa09984FE2Bf008d5f3c",
       "txHash": "0x71ec6fc0d3a95f787876062b182703428b565275d308bfe54f0eb2ca8a1ad921",
       "kind": "transparent"
+    },
+    {
+      "address": "0x2EC9C8Ab2ED93189D5998F53929a13450FC00971",
+      "txHash": "0x88adf48a792b4d953bfbf941cf54837dbd4f4b3a12bfc7ac22273c113447c555",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -7574,6 +7579,65 @@
           }
         ],
         "types": {
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "0x49F137f60B5A7FbAD577D16f33cFe6Be743C8c06": {
+      "address": "0x49F137f60B5A7FbAD577D16f33cFe6Be743C8c06",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "callHash",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_bytes32",
+            "contract": "DebtManager",
+            "src": "contracts/periphery/DebtManager.sol:464"
+          },
+          {
+            "label": "_msgSender",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "DebtManager",
+            "src": "contracts/periphery/DebtManager.sol:519"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
           "t_bool": {
             "label": "bool",
             "numberOfBytes": "1"

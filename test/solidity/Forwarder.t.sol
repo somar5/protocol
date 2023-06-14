@@ -8,14 +8,15 @@ import {
   DebtManager,
   Market,
   ERC20,
-  Permit,
   Auditor,
+  Permit,
   IPermit2,
   IBalancerVault,
   IUniswapQuoter
 } from "../../contracts/periphery/DebtManager.sol";
+import { Forwarder } from "../../contracts/periphery/Forwarder.sol";
 
-contract SocketTest is ForkTest {
+contract ForwarderTest is ForkTest {
   using Address for address;
   using stdJson for string;
 
@@ -24,13 +25,14 @@ contract SocketTest is ForkTest {
   address internal bob;
 
   DebtManager internal debtManager;
+  Forwarder internal forwarder;
   Market internal marketUSDC;
   ERC20 internal usdc;
 
   function setUp() external {
     vm.createSelectFork(vm.envString("OPTIMISM_NODE"), 105_372_119);
     marketUSDC = Market(deployment("MarketUSDC"));
-    usdc = marketUSDC.asset();
+    usdc = ERC20(deployment("USDC"));
     debtManager = DebtManager(
       address(
         new ERC1967Proxy(
@@ -40,29 +42,28 @@ contract SocketTest is ForkTest {
               IPermit2(deployment("Permit2")),
               IBalancerVault(deployment("BalancerVault")),
               deployment("UniswapV3Factory"),
-              IUniswapQuoter(deployment("UniswapQuoter"))
+              IUniswapQuoter(address(0))
             )
           ),
           abi.encodeCall(DebtManager.initialize, ())
         )
       )
     );
+    forwarder = new Forwarder(debtManager);
+    vm.label(address(debtManager), "DebtManager");
 
     deal(address(usdc), address(this), ASSETS);
-    usdc.approve(address(marketUSDC), ASSETS);
 
     bob = vm.addr(BOB_KEY);
     vm.label(bob, "bob");
   }
 
-  function testSocketDeposit() external {
-    socketCall(address(marketUSDC), abi.encodeCall(marketUSDC.deposit, (ASSETS, bob)));
+  function testForwardDeposit() external {
+    socketCall(address(forwarder), abi.encodeCall(forwarder.deposit, (marketUSDC, bob)));
     assertEq(marketUSDC.maxWithdraw(bob), ASSETS - 1);
   }
 
-  function testSocketLeverage() external {
-    usdc.approve(address(debtManager), ASSETS);
-
+  function testForwardLeverage() external {
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(
       BOB_KEY,
       keccak256(
@@ -74,7 +75,7 @@ contract SocketTest is ForkTest {
               keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"),
               bob,
               debtManager,
-              ASSETS * 2,
+              666_666e6,
               marketUSDC.nonces(bob),
               block.timestamp
             )
@@ -82,26 +83,15 @@ contract SocketTest is ForkTest {
         )
       )
     );
-
     socketCall(
-      address(debtManager),
-      abi.encodeCall(ILeverage.leverage, (marketUSDC, ASSETS, 2e18, ASSETS * 2, Permit(bob, block.timestamp, v, r, s)))
+      address(forwarder),
+      abi.encodeCall(forwarder.leverage, (marketUSDC, 1.5e18, 666_666e6, Permit(bob, block.timestamp, v, r, s)))
     );
-    assertEq(marketUSDC.maxWithdraw(bob), ASSETS * 3 - 2);
   }
 
   function socketCall(address target, bytes memory payload) internal {
+    usdc.approve(target, ASSETS);
     target.functionCall(payload, "");
     assertEq(usdc.balanceOf(address(this)), 0);
   }
-}
-
-interface ILeverage {
-  function leverage(
-    Market market,
-    uint256 deposit,
-    uint256 multiplier,
-    uint256 borrowAssets,
-    Permit calldata marketPermit
-  ) external;
 }
