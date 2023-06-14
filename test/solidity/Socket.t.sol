@@ -11,7 +11,8 @@ import {
   Permit,
   Auditor,
   IPermit2,
-  IBalancerVault
+  IBalancerVault,
+  IUniswapQuoter
 } from "../../contracts/periphery/DebtManager.sol";
 
 contract SocketTest is ForkTest {
@@ -38,7 +39,8 @@ contract SocketTest is ForkTest {
               Auditor(deployment("Auditor")),
               IPermit2(deployment("Permit2")),
               IBalancerVault(deployment("BalancerVault")),
-              deployment("UniswapV3Factory")
+              deployment("UniswapV3Factory"),
+              IUniswapQuoter(deployment("UniswapQuoter"))
             )
           ),
           abi.encodeCall(DebtManager.initialize, ())
