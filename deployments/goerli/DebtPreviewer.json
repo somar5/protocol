@@ -1,5 +1,5 @@
 {
-  "address": "0xA5DF45A240eebE3745062c616688a2AafA6a55DA",
+  "address": "0xcC935eb193f3AB44d369F0dFe1e6b4D6fb691036",
   "abi": [
     {
       "anonymous": false,
@@ -126,17 +126,7 @@
     },
     {
       "inputs": [],
-      "name": "Disagreement",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "InvalidOperation",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "MarketNotListed",
+      "name": "InvalidPreview",
       "type": "error"
     },
     {
@@ -153,37 +143,11 @@
       "type": "event"
     },
     {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "market",
-          "type": "address"
-        }
-      ],
-      "name": "approve",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "inputs": [],
-      "name": "auditor",
+      "name": "debtManager",
       "outputs": [
         {
-          "internalType": "contract Auditor",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "balancerVault",
-      "outputs": [
-        {
-          "internalType": "contract IBalancerVault",
+          "internalType": "contract DebtManager",
           "name": "",
           "type": "address"
         }
@@ -194,438 +158,28 @@
     {
       "inputs": [
         {
-          "internalType": "contract Market",
-          "name": "marketIn",
-          "type": "address"
-        },
-        {
-          "internalType": "contract Market",
-          "name": "marketOut",
-          "type": "address"
-        },
-        {
-          "internalType": "uint24",
-          "name": "fee",
-          "type": "uint24"
-        },
-        {
-          "internalType": "uint256",
-          "name": "withdraw",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ratio",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint160",
-          "name": "sqrtPriceLimitX96",
-          "type": "uint160"
-        },
-        {
-          "internalType": "uint256",
-          "name": "permitAssets",
-          "type": "uint256"
-        },
-        {
           "components": [
             {
               "internalType": "address",
-              "name": "account",
+              "name": "tokenA",
               "type": "address"
             },
-            {
-              "internalType": "uint256",
-              "name": "deadline",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint8",
-              "name": "v",
-              "type": "uint8"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "r",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "s",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct Permit",
-          "name": "p",
-          "type": "tuple"
-        }
-      ],
-      "name": "crossDeleverage",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "marketIn",
-          "type": "address"
-        },
-        {
-          "internalType": "contract Market",
-          "name": "marketOut",
-          "type": "address"
-        },
-        {
-          "internalType": "uint24",
-          "name": "fee",
-          "type": "uint24"
-        },
-        {
-          "internalType": "uint256",
-          "name": "withdraw",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ratio",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint160",
-          "name": "sqrtPriceLimitX96",
-          "type": "uint160"
-        }
-      ],
-      "name": "crossDeleverage",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "marketIn",
-          "type": "address"
-        },
-        {
-          "internalType": "contract Market",
-          "name": "marketOut",
-          "type": "address"
-        },
-        {
-          "internalType": "uint24",
-          "name": "fee",
-          "type": "uint24"
-        },
-        {
-          "internalType": "uint256",
-          "name": "deposit",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ratio",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint160",
-          "name": "sqrtPriceLimitX96",
-          "type": "uint160"
-        },
-        {
-          "internalType": "uint256",
-          "name": "borrowAssets",
-          "type": "uint256"
-        },
-        {
-          "components": [
             {
               "internalType": "address",
-              "name": "account",
+              "name": "tokenB",
               "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "deadline",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint8",
-              "name": "v",
-              "type": "uint8"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "r",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "s",
-              "type": "bytes32"
             }
           ],
-          "internalType": "struct Permit",
-          "name": "marketPermit",
-          "type": "tuple"
+          "internalType": "struct Pool[]",
+          "name": "pools",
+          "type": "tuple[]"
         },
         {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "deadline",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint8",
-              "name": "v",
-              "type": "uint8"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "r",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "s",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct Permit",
-          "name": "assetPermit",
-          "type": "tuple"
+          "internalType": "uint24[]",
+          "name": "fees",
+          "type": "uint24[]"
         }
       ],
-      "name": "crossLeverage",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "marketIn",
-          "type": "address"
-        },
-        {
-          "internalType": "contract Market",
-          "name": "marketOut",
-          "type": "address"
-        },
-        {
-          "internalType": "uint24",
-          "name": "fee",
-          "type": "uint24"
-        },
-        {
-          "internalType": "uint256",
-          "name": "deposit",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ratio",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint160",
-          "name": "sqrtPriceLimitX96",
-          "type": "uint160"
-        },
-        {
-          "internalType": "uint256",
-          "name": "borrowAssets",
-          "type": "uint256"
-        },
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "deadline",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint8",
-              "name": "v",
-              "type": "uint8"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "r",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "s",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct Permit",
-          "name": "marketPermit",
-          "type": "tuple"
-        },
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "deadline",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bytes",
-              "name": "signature",
-              "type": "bytes"
-            }
-          ],
-          "internalType": "struct Permit2",
-          "name": "assetPermit",
-          "type": "tuple"
-        }
-      ],
-      "name": "crossLeverage",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "marketIn",
-          "type": "address"
-        },
-        {
-          "internalType": "contract Market",
-          "name": "marketOut",
-          "type": "address"
-        },
-        {
-          "internalType": "uint24",
-          "name": "fee",
-          "type": "uint24"
-        },
-        {
-          "internalType": "uint256",
-          "name": "deposit",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ratio",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint160",
-          "name": "sqrtPriceLimitX96",
-          "type": "uint160"
-        }
-      ],
-      "name": "crossLeverage",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "market",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "withdraw",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ratio",
-          "type": "uint256"
-        }
-      ],
-      "name": "deleverage",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "market",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "withdraw",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ratio",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "permitAssets",
-          "type": "uint256"
-        },
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "deadline",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint8",
-              "name": "v",
-              "type": "uint8"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "r",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "s",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct Permit",
-          "name": "p",
-          "type": "tuple"
-        }
-      ],
-      "name": "deleverage",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "initialize",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -635,613 +189,362 @@
       "inputs": [
         {
           "internalType": "contract Market",
-          "name": "market",
+          "name": "marketDeposit",
           "type": "address"
         },
-        {
-          "internalType": "uint256",
-          "name": "deposit",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ratio",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "borrowAssets",
-          "type": "uint256"
-        },
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "deadline",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint8",
-              "name": "v",
-              "type": "uint8"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "r",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "s",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct Permit",
-          "name": "marketPermit",
-          "type": "tuple"
-        }
-      ],
-      "name": "leverage",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
         {
           "internalType": "contract Market",
-          "name": "market",
+          "name": "marketBorrow",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
           "type": "address"
         },
         {
           "internalType": "uint256",
-          "name": "deposit",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ratio",
+          "name": "minHealthFactor",
           "type": "uint256"
         }
       ],
       "name": "leverage",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "market",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "deposit",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ratio",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "borrowAssets",
-          "type": "uint256"
-        },
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "deadline",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint8",
-              "name": "v",
-              "type": "uint8"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "r",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "s",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct Permit",
-          "name": "marketPermit",
-          "type": "tuple"
-        },
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "deadline",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint8",
-              "name": "v",
-              "type": "uint8"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "r",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "s",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct Permit",
-          "name": "assetPermit",
-          "type": "tuple"
-        }
-      ],
-      "name": "leverage",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "market",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "deposit",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "ratio",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "borrowAssets",
-          "type": "uint256"
-        },
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "deadline",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint8",
-              "name": "v",
-              "type": "uint8"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "r",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "s",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct Permit",
-          "name": "marketPermit",
-          "type": "tuple"
-        },
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "deadline",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bytes",
-              "name": "signature",
-              "type": "bytes"
-            }
-          ],
-          "internalType": "struct Permit2",
-          "name": "assetPermit",
-          "type": "tuple"
-        }
-      ],
-      "name": "leverage",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "permit2",
       "outputs": [
         {
-          "internalType": "contract IPermit2",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract ERC20[]",
-          "name": "",
-          "type": "address[]"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "",
-          "type": "uint256[]"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "",
-          "type": "uint256[]"
-        },
-        {
-          "internalType": "bytes",
-          "name": "userData",
-          "type": "bytes"
-        }
-      ],
-      "name": "receiveFlashLoan",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "market",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "repayMaturity",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "borrowMaturity",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "maxRepayAssets",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "maxBorrowAssets",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "percentage",
-          "type": "uint256"
-        }
-      ],
-      "name": "rollFixed",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "market",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "repayMaturity",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "borrowMaturity",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "maxRepayAssets",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "maxBorrowAssets",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "percentage",
-          "type": "uint256"
-        },
-        {
           "components": [
             {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            },
-            {
               "internalType": "uint256",
-              "name": "deadline",
+              "name": "ratio",
               "type": "uint256"
             },
             {
-              "internalType": "uint8",
-              "name": "v",
-              "type": "uint8"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "r",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "s",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct Permit",
-          "name": "p",
-          "type": "tuple"
-        }
-      ],
-      "name": "rollFixed",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "market",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "repayMaturity",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "maxRepayAssets",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "percentage",
-          "type": "uint256"
-        }
-      ],
-      "name": "rollFixedToFloating",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "market",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "repayMaturity",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "maxRepayAssets",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "percentage",
-          "type": "uint256"
-        },
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            },
-            {
               "internalType": "uint256",
-              "name": "deadline",
+              "name": "borrow",
               "type": "uint256"
             },
             {
-              "internalType": "uint8",
-              "name": "v",
-              "type": "uint8"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "r",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "s",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct Permit",
-          "name": "p",
-          "type": "tuple"
-        }
-      ],
-      "name": "rollFixedToFloating",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "market",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "borrowMaturity",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "maxBorrowAssets",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "percentage",
-          "type": "uint256"
-        }
-      ],
-      "name": "rollFloatingToFixed",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract Market",
-          "name": "market",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "borrowMaturity",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "maxBorrowAssets",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "percentage",
-          "type": "uint256"
-        },
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            },
-            {
               "internalType": "uint256",
-              "name": "deadline",
+              "name": "deposit",
               "type": "uint256"
             },
             {
-              "internalType": "uint8",
-              "name": "v",
-              "type": "uint8"
+              "internalType": "int256",
+              "name": "principal",
+              "type": "int256"
             },
             {
-              "internalType": "bytes32",
-              "name": "r",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "maxRatio",
+              "type": "uint256"
             },
             {
-              "internalType": "bytes32",
-              "name": "s",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "minDeposit",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxWithdraw",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "token0",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "token1",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint24",
+                  "name": "fee",
+                  "type": "uint24"
+                }
+              ],
+              "internalType": "struct PoolKey",
+              "name": "pool",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "sqrtPriceX96",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "contract ERC20",
+                  "name": "asset",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "liquidity",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct AvailableAsset[]",
+              "name": "availableAssets",
+              "type": "tuple[]"
             }
           ],
-          "internalType": "struct Permit",
-          "name": "p",
+          "internalType": "struct Leverage",
+          "name": "",
           "type": "tuple"
         }
       ],
-      "name": "rollFloatingToFixed",
-      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "uniswapV3Factory",
-      "outputs": [
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
         {
           "internalType": "address",
           "name": "",
           "type": "address"
         }
       ],
+      "name": "poolFees",
+      "outputs": [
+        {
+          "internalType": "uint24",
+          "name": "",
+          "type": "uint24"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
         {
-          "internalType": "int256",
-          "name": "amount0Delta",
-          "type": "int256"
+          "internalType": "contract Market",
+          "name": "marketDeposit",
+          "type": "address"
         },
         {
-          "internalType": "int256",
-          "name": "amount1Delta",
-          "type": "int256"
+          "internalType": "contract Market",
+          "name": "marketBorrow",
+          "type": "address"
         },
         {
-          "internalType": "bytes",
-          "name": "data",
-          "type": "bytes"
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "withdraw",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "ratio",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "minHealthFactor",
+          "type": "uint256"
         }
       ],
-      "name": "uniswapV3SwapCallback",
-      "outputs": [],
+      "name": "previewDeleverage",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "ratio",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "borrow",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "deposit",
+              "type": "uint256"
+            },
+            {
+              "internalType": "int256",
+              "name": "principal",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxRatio",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct Limit",
+          "name": "limit",
+          "type": "tuple"
+        }
+      ],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "assetIn",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "assetOut",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountIn",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint24",
+          "name": "fee",
+          "type": "uint24"
+        }
+      ],
+      "name": "previewInputSwap",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract Market",
+          "name": "marketDeposit",
+          "type": "address"
+        },
+        {
+          "internalType": "contract Market",
+          "name": "marketBorrow",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "deposit",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "ratio",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "minHealthFactor",
+          "type": "uint256"
+        }
+      ],
+      "name": "previewLeverage",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "ratio",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "borrow",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "deposit",
+              "type": "uint256"
+            },
+            {
+              "internalType": "int256",
+              "name": "principal",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxRatio",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct Limit",
+          "name": "limit",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "assetIn",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "assetOut",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountOut",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint24",
+          "name": "fee",
+          "type": "uint24"
+        }
+      ],
+      "name": "previewOutputSwap",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "uniswapV3Quoter",
+      "outputs": [
+        {
+          "internalType": "contract IUniswapQuoter",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -1266,134 +569,64 @@
       "type": "constructor"
     }
   ],
-  "transactionHash": "0x1acf57281254c20f120b0ac2ab13281a0f446c418426cd340d2fd836d39e9171",
+  "transactionHash": "0xbe967a04303ef3542a35de157d7e2c0ca33ad2f0cfd52897951e19d7a7ab6822",
   "receipt": {
     "to": null,
     "from": "0xDb90CDB64CfF03f254e4015C4F705C3F3C834400",
-    "contractAddress": "0xA5DF45A240eebE3745062c616688a2AafA6a55DA",
-    "transactionIndex": 24,
-    "gasUsed": "753898",
-    "logsBloom": "0x00010000080000000000000000000004400010000801000000000000000000000000000000000000280000000020000000000000000000000000000000200000000000000101000000028000000002040000020000000000000002000000010800000000000000100000000000000000000000800000000040008000000001004000000000000000000000000000000000000000000080000008180008800002020000000000000000000000000400000000002000020000400400001000000000000020000000080000000000040000008000040400000000040000080000000010000000000000000000000010000000000000000000000000000000000000",
-    "blockHash": "0x6343c0343bfea6f7f9ddb1d5863744891b8ed9add19b6b4cda3ddfeb9fdebef0",
-    "transactionHash": "0x1acf57281254c20f120b0ac2ab13281a0f446c418426cd340d2fd836d39e9171",
+    "contractAddress": "0xcC935eb193f3AB44d369F0dFe1e6b4D6fb691036",
+    "transactionIndex": 21,
+    "gasUsed": "580425",
+    "logsBloom": "0x00000000000000000000000000000000400000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000008000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000080000000000000800000000000000000000000000000000400000000000000004000000000000000000000000020000000000000000000040000000000000400000040000004000000000000008000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x005543db1966b2d63209969b77c90e98542b6077a9af5271aa1f2bc7e0f87f86",
+    "transactionHash": "0xbe967a04303ef3542a35de157d7e2c0ca33ad2f0cfd52897951e19d7a7ab6822",
     "logs": [
       {
-        "transactionIndex": 24,
-        "blockNumber": 9335002,
-        "transactionHash": "0x1acf57281254c20f120b0ac2ab13281a0f446c418426cd340d2fd836d39e9171",
-        "address": "0xA5DF45A240eebE3745062c616688a2AafA6a55DA",
+        "transactionIndex": 21,
+        "blockNumber": 9335006,
+        "transactionHash": "0xbe967a04303ef3542a35de157d7e2c0ca33ad2f0cfd52897951e19d7a7ab6822",
+        "address": "0xcC935eb193f3AB44d369F0dFe1e6b4D6fb691036",
         "topics": [
           "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
-          "0x000000000000000000000000179c07e1bc481b221c1fe9cb9e0af5918e8e592e"
+          "0x000000000000000000000000c906db5f67cc6dca0c97c60174edb777ca5fa2e0"
         ],
         "data": "0x",
-        "logIndex": 3070,
-        "blockHash": "0x6343c0343bfea6f7f9ddb1d5863744891b8ed9add19b6b4cda3ddfeb9fdebef0"
-      },
-      {
-        "transactionIndex": 24,
-        "blockNumber": 9335002,
-        "transactionHash": "0x1acf57281254c20f120b0ac2ab13281a0f446c418426cd340d2fd836d39e9171",
-        "address": "0x2e3A2fb8473316A02b8A297B982498E661E1f6f5",
-        "topics": [
-          "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
-          "0x000000000000000000000000a5df45a240eebe3745062c616688a2aafa6a55da",
-          "0x00000000000000000000000072795c6f67783bb35c23164a0b54f9de0f46c2da"
-        ],
-        "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
         "logIndex": 3071,
-        "blockHash": "0x6343c0343bfea6f7f9ddb1d5863744891b8ed9add19b6b4cda3ddfeb9fdebef0"
+        "blockHash": "0x005543db1966b2d63209969b77c90e98542b6077a9af5271aa1f2bc7e0f87f86"
       },
       {
-        "transactionIndex": 24,
-        "blockNumber": 9335002,
-        "transactionHash": "0x1acf57281254c20f120b0ac2ab13281a0f446c418426cd340d2fd836d39e9171",
-        "address": "0xDF1742fE5b0bFc12331D8EAec6b478DfDbD31464",
-        "topics": [
-          "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
-          "0x000000000000000000000000a5df45a240eebe3745062c616688a2aafa6a55da",
-          "0x000000000000000000000000cf830a26cb28e499d5e7346eb668821933ecb452"
-        ],
-        "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-        "logIndex": 3072,
-        "blockHash": "0x6343c0343bfea6f7f9ddb1d5863744891b8ed9add19b6b4cda3ddfeb9fdebef0"
-      },
-      {
-        "transactionIndex": 24,
-        "blockNumber": 9335002,
-        "transactionHash": "0x1acf57281254c20f120b0ac2ab13281a0f446c418426cd340d2fd836d39e9171",
-        "address": "0xA2025B15a1757311bfD68cb14eaeFCc237AF5b43",
-        "topics": [
-          "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
-          "0x000000000000000000000000a5df45a240eebe3745062c616688a2aafa6a55da",
-          "0x00000000000000000000000022ba6b356303ad14b3da2e1e268dadcb07352c43"
-        ],
-        "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-        "logIndex": 3073,
-        "blockHash": "0x6343c0343bfea6f7f9ddb1d5863744891b8ed9add19b6b4cda3ddfeb9fdebef0"
-      },
-      {
-        "transactionIndex": 24,
-        "blockNumber": 9335002,
-        "transactionHash": "0x1acf57281254c20f120b0ac2ab13281a0f446c418426cd340d2fd836d39e9171",
-        "address": "0x8869DFd060c682675c2A8aE5B21F2cF738A0E3CE",
-        "topics": [
-          "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
-          "0x000000000000000000000000a5df45a240eebe3745062c616688a2aafa6a55da",
-          "0x0000000000000000000000002056256190ed2f7e72f54cad73fdb37610974de0"
-        ],
-        "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-        "logIndex": 3074,
-        "blockHash": "0x6343c0343bfea6f7f9ddb1d5863744891b8ed9add19b6b4cda3ddfeb9fdebef0"
-      },
-      {
-        "transactionIndex": 24,
-        "blockNumber": 9335002,
-        "transactionHash": "0x1acf57281254c20f120b0ac2ab13281a0f446c418426cd340d2fd836d39e9171",
-        "address": "0x6320cD32aA674d2898A68ec82e869385Fc5f7E2f",
-        "topics": [
-          "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
-          "0x000000000000000000000000a5df45a240eebe3745062c616688a2aafa6a55da",
-          "0x0000000000000000000000000d337f4d28abd8f542ed1cf0d5d45e32db3e95c1"
-        ],
-        "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-        "logIndex": 3075,
-        "blockHash": "0x6343c0343bfea6f7f9ddb1d5863744891b8ed9add19b6b4cda3ddfeb9fdebef0"
-      },
-      {
-        "transactionIndex": 24,
-        "blockNumber": 9335002,
-        "transactionHash": "0x1acf57281254c20f120b0ac2ab13281a0f446c418426cd340d2fd836d39e9171",
-        "address": "0xA5DF45A240eebE3745062c616688a2AafA6a55DA",
+        "transactionIndex": 21,
+        "blockNumber": 9335006,
+        "transactionHash": "0xbe967a04303ef3542a35de157d7e2c0ca33ad2f0cfd52897951e19d7a7ab6822",
+        "address": "0xcC935eb193f3AB44d369F0dFe1e6b4D6fb691036",
         "topics": [
           "0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498"
         ],
         "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
-        "logIndex": 3076,
-        "blockHash": "0x6343c0343bfea6f7f9ddb1d5863744891b8ed9add19b6b4cda3ddfeb9fdebef0"
+        "logIndex": 3072,
+        "blockHash": "0x005543db1966b2d63209969b77c90e98542b6077a9af5271aa1f2bc7e0f87f86"
       },
       {
-        "transactionIndex": 24,
-        "blockNumber": 9335002,
-        "transactionHash": "0x1acf57281254c20f120b0ac2ab13281a0f446c418426cd340d2fd836d39e9171",
-        "address": "0xA5DF45A240eebE3745062c616688a2AafA6a55DA",
+        "transactionIndex": 21,
+        "blockNumber": 9335006,
+        "transactionHash": "0xbe967a04303ef3542a35de157d7e2c0ca33ad2f0cfd52897951e19d7a7ab6822",
+        "address": "0xcC935eb193f3AB44d369F0dFe1e6b4D6fb691036",
         "topics": [
           "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f"
         ],
-        "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000078455b3f2993528b62a6b95b4769020702384723",
-        "logIndex": 3077,
-        "blockHash": "0x6343c0343bfea6f7f9ddb1d5863744891b8ed9add19b6b4cda3ddfeb9fdebef0"
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000db90cdb64cff03f254e4015c4f705c3f3c834400",
+        "logIndex": 3073,
+        "blockHash": "0x005543db1966b2d63209969b77c90e98542b6077a9af5271aa1f2bc7e0f87f86"
       }
     ],
-    "blockNumber": 9335002,
-    "cumulativeGasUsed": "16929223",
+    "blockNumber": 9335006,
+    "cumulativeGasUsed": "14865965",
     "status": 1,
     "byzantium": true
   },
   "args": [
-    "0x179c07E1bC481b221C1fe9Cb9E0aF5918e8e592e",
-    "0x78455B3F2993528B62a6b95b4769020702384723",
-    "0x8129fc1c"
+    "0xC906db5f67cC6dcA0C97c60174edb777Ca5Fa2e0",
+    "0xDb90CDB64CfF03f254e4015C4F705C3F3C834400",
+    "0x9241c920000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000001200000000000000000000000000000000000000000000000000000000000000003000000000000000000000000a2025b15a1757311bfd68cb14eaefcc237af5b430000000000000000000000008869dfd060c682675c2a8ae5b21f2cf738a0e3ce000000000000000000000000df1742fe5b0bfc12331d8eaec6b478dfdbd314640000000000000000000000008869dfd060c682675c2a8ae5b21f2cf738a0e3ce000000000000000000000000df1742fe5b0bfc12331d8eaec6b478dfdbd31464000000000000000000000000a2025b15a1757311bfd68cb14eaefcc237af5b43000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000000001f400000000000000000000000000000000000000000000000000000000000001f400000000000000000000000000000000000000000000000000000000000001f4"
   ],
   "numDeployments": 1,
   "solcInputHash": "c7205b61ec52d679b6e33ebb6ade6213",
@@ -1402,9 +635,29 @@
   "deployedBytecode": "0x60806040526004361061004e5760003560e01c80633659cfe6146100655780634f1ef286146100855780635c60da1b146100985780638f283970146100c9578063f851a440146100e95761005d565b3661005d5761005b6100fe565b005b61005b6100fe565b34801561007157600080fd5b5061005b610080366004610546565b610118565b61005b610093366004610561565b610155565b3480156100a457600080fd5b506100ad6101bc565b6040516001600160a01b03909116815260200160405180910390f35b3480156100d557600080fd5b5061005b6100e4366004610546565b6101ed565b3480156100f557600080fd5b506100ad61020d565b610106610269565b610116610111610285565b61028f565b565b6101206102b3565b6001600160a01b0316330361014d5761014a816040518060200160405280600081525060006102e6565b50565b61014a6100fe565b61015d6102b3565b6001600160a01b031633036101b4576101af8383838080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250600192506102e6915050565b505050565b6101af6100fe565b60006101c66102b3565b6001600160a01b031633036101e2576101dd610285565b905090565b6101ea6100fe565b90565b6101f56102b3565b6001600160a01b0316330361014d5761014a81610311565b60006102176102b3565b6001600160a01b031633036101e2576101dd6102b3565b6060610253838360405180606001604052806027815260200161061460279139610365565b9392505050565b6001600160a01b03163b151590565b6102716102b3565b6001600160a01b0316330361011657600080fd5b60006101dd6103dd565b3660008037600080366000845af43d6000803e8080156102ae573d6000f35b3d6000fd5b60007fb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d61035b546001600160a01b0316919050565b6102ef83610405565b6000825111806102fc5750805b156101af5761030b838361022e565b50505050565b7f7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f61033a6102b3565b604080516001600160a01b03928316815291841660208301520160405180910390a161014a81610445565b6060600080856001600160a01b03168560405161038291906105e4565b600060405180830381855af49150503d80600081146103bd576040519150601f19603f3d011682016040523d82523d6000602084013e6103c2565b606091505b50915091506103d38683838761049c565b9695505050505050565b60007f360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc6102d7565b61040e816104da565b6040516001600160a01b038216907fbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b90600090a250565b6001600160a01b03811661045857600080fd5b807fb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d61035b80546001600160a01b0319166001600160a01b039290921691909117905550565b606083156104c85782516000036104c1576001600160a01b0385163b6104c157600080fd5b50816104d2565b6104d28383610515565b949350505050565b6001600160a01b0381163b6104ee57600080fd5b807f360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc61047b565b8151156105255781518083602001fd5b600080fd5b80356001600160a01b038116811461054157600080fd5b919050565b60006020828403121561055857600080fd5b6102538261052a565b60008060006040848603121561057657600080fd5b61057f8461052a565b9250602084013567ffffffffffffffff8082111561059c57600080fd5b818601915086601f8301126105b057600080fd5b8135818111156105bf57600080fd5b8760208285010111156105d157600080fd5b6020830194508093505050509250925092565b6000825160005b8181101561060557602081860181015185830152016105eb565b50600092019182525091905056fe416464726573733a206c6f772d6c6576656c2064656c65676174652063616c6c206661696c6564a26469706673582212203011748945e626a6c7d6bd1969f4e5640e829c89504a5d4e52671d90f482851564736f6c63430008110033",
   "execute": {
     "methodName": "initialize",
-    "args": []
+    "args": [
+      [
+        [
+          {},
+          {}
+        ],
+        [
+          {},
+          {}
+        ],
+        [
+          {},
+          {}
+        ]
+      ],
+      [
+        500,
+        500,
+        500
+      ]
+    ]
   },
-  "implementation": "0x179c07E1bC481b221C1fe9Cb9E0aF5918e8e592e",
+  "implementation": "0xC906db5f67cC6dcA0C97c60174edb777Ca5Fa2e0",
   "devdoc": {
     "details": "This contract implements a proxy that is upgradeable by an admin. To avoid https://medium.com/nomic-labs-blog/malicious-backdoors-in-ethereum-proxies-62629adf3357[proxy selector clashing], which can potentially be used in an attack, this contract uses the https://blog.openzeppelin.com/the-transparent-proxy-pattern/[transparent proxy pattern]. This pattern implies two things that go hand in hand: 1. If any account other than the admin calls the proxy, the call will be forwarded to the implementation, even if that call matches one of the admin functions exposed by the proxy itself. 2. If the admin calls the proxy, it can access the admin functions, but its calls will never be forwarded to the implementation. If the admin tries to call a function on the implementation it will fail with an error that says \"admin cannot fallback to proxy target\". These properties mean that the admin account can only be used for admin actions like upgrading the proxy or changing the admin, so it's best if it's a dedicated account that is not used for anything else. This will avoid headaches due to sudden errors when trying to call a function from the proxy implementation. Our recommendation is for the dedicated account to be an instance of the {ProxyAdmin} contract. If set up this way, you should think of the `ProxyAdmin` instance as the real administrative interface of your proxy.",
     "kind": "dev",
