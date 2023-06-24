@@ -73,12 +73,7 @@ contract DebtManagerTest is ForkTest {
         )
       )
     );
-    debtPreviewer = new DebtPreviewer(
-      debtManager,
-      IUniswapQuoter(deployment("UniswapV3Quoter")),
-      new DebtPreviewer.Pool[](0),
-      new uint24[](0)
-    );
+    debtPreviewer = new DebtPreviewer(debtManager, IUniswapQuoter(deployment("UniswapV3Quoter")));
     vm.label(address(debtManager), "DebtManager");
     assertLt(usdc.balanceOf(address(debtManager.balancerVault())), 1_000_000e6);
 
