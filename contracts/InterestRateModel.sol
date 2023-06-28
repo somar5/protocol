@@ -4,9 +4,8 @@ pragma solidity 0.8.17;
 import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
 import { FixedPointMathLib } from "solmate/src/utils/FixedPointMathLib.sol";
 import { Market } from "./Market.sol";
-import { Test } from "forge-std/Test.sol";
 
-contract InterestRateModel is Test {
+contract InterestRateModel {
   using FixedPointMathLib for uint256;
   using FixedPointMathLib for int256;
 
@@ -24,13 +23,10 @@ contract InterestRateModel is Test {
   /// @notice Asymptote of the floating curve.
   uint256 public immutable maxUtilization;
 
-  // FIXME: rename vars
-  uint256 public immutable cte1;
-  uint256 public immutable cte4;
   uint256 public immutable naturalUtilization;
-  int256 public immutable x0;
-  uint256 public immutable kInt;
-  int256 public immutable k;
+  uint256 public immutable utilizationFactor;
+  int256 public immutable sigmoidSpeed;
+  int256 internal immutable auxULiq0;
 
   /// @notice Scale factor of the fixed curve.
   uint256 public immutable fixedCurveA;
@@ -65,15 +61,14 @@ contract InterestRateModel is Test {
     curveB = curveB_;
     maxUtilization = maxUtilization_;
 
-    cte1 = 1e18 - naturalUtilization_;
-    cte4 = 1e18 - naturalUtilization_ / 2;
-    x0 = int256(naturalUtilization.divWadDown(1e18 - naturalUtilization)).lnWad();
-    kInt = 1;
-    k = 1e18;
+    utilizationFactor = 1e18 - naturalUtilization_ / 2;
+    auxULiq0 = int256(naturalUtilization.divWadDown(1e18 - naturalUtilization)).lnWad();
+    sigmoidSpeed = 1e18;
 
     // reverts if it's an invalid curve (such as one yielding a negative interest rate).
     fixedRate(0, 0);
-    floatingRate(0, 0, 0);
+
+    // floatingRate(0, 0, 0);
   }
 
   /// @notice Gets the rate to borrow a certain amount at a certain maturity with supply/demand values in the fixed rate
@@ -156,57 +151,31 @@ contract InterestRateModel is Test {
   /// @param backupBorrowed amount borrowed from the backup supplier.
   /// @return the interest rate, with 18 decimals precision.
   function floatingRate(uint256 assets, uint256 debt, uint256 backupBorrowed) public view returns (uint256) {
+    assert(debt >= backupBorrowed);
     uint256 liquidity = assets - debt - backupBorrowed;
     uint256 utilization = assets > 0 ? (debt).divWadUp(assets) : 0;
 
-    int256 r = int256(floatingCurveA.divWadDown(floatingMaxUtilization - utilization)) + floatingCurveB;
-    assert(r >= 0);
-    if (liquidity == 0) return uint256(r);
-
-    return cte1.mulWadDown(uint256(r)).mulDivDown(assets, liquidity);
-
-    // # M1
-    // ULiq = 1 - (Liq/FA)
-    // R = cte/(1-ULiq)(A/(Um - Ui) + B)
-    // -> R = r*cte/(Liq/FA)
-    // -> R = r*cte*FA/Liq
-  }
-
-  function floatingRateSigmoid(uint256 assets, uint256 debt, uint256 backupBorrowed) public returns (uint256) {
-    uint256 liquidity = assets - debt - backupBorrowed;
-    uint256 utilization = assets > 0 ? (debt).divWadUp(assets) : 0;
     assert(utilization < 1e18);
     int256 r = int256(floatingCurveA.divWadDown(floatingMaxUtilization - utilization)) + floatingCurveB;
     assert(r >= 0);
-    emit log_named_decimal_uint("A       ", floatingCurveA, 18);
-    emit log_named_decimal_int("B        ", floatingCurveB, 18);
-    emit log_named_decimal_uint("UMax     ", floatingMaxUtilization, 18);
-
-    emit log_named_decimal_uint("oldFormula       ", uint(r), 18);
     if (liquidity == 0) return uint256(r);
 
-    uint256 uLiq = 1e18 - liquidity.divWadUp(assets);
+    uint256 uLiq = 1e18 - liquidity.divWadDown(assets);
     if (uLiq == 0) return uint256(r);
 
-    // TODO: needed?
-    assert(uLiq < 1e18);
+    if (utilization > uLiq) return 0;
 
-    uint256 sigmoidOutput = sigmoid(uLiq);
-    emit log_named_decimal_uint("sigmoid output   ", sigmoidOutput, 18);
-
-    return (cte4.mulWadDown(uint256(r))).divWadDown(1e18 - sigmoidOutput.mulWadDown(uLiq));
-  }
-
-  function sigmoid(uint256 uLiq) internal returns (uint256) {
-    // todo: require s != 0
-    require(uLiq != 0, "uLiq == 0");
-
-    int256 x = int256(uLiq.divWadDown(1e18 - uLiq)).lnWad();
-
-    emit log_named_decimal_int("x                ", x, 18);
-    emit log_named_decimal_int("x0               ", x0, 18);
-
-    return uint256(1e18).divWadDown(uint256(1e18 + (-((k * (x - x0)) / 1e18)).expWad()));
+    return
+      (utilizationFactor.mulWadDown(uint256(r))).divWadDown(
+        1e18 -
+          uint256(1e18)
+            .divWadDown(
+              uint256(
+                1e18 + (-((sigmoidSpeed * (int256(uLiq.divWadDown(1e18 - uLiq)).lnWad() - auxULiq0)) / 1e18)).expWad()
+              )
+            )
+            .mulWadDown(uLiq)
+      );
   }
 }
 
