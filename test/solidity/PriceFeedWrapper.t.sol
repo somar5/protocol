@@ -13,7 +13,6 @@ contract PriceFeedWrapperTest is Test {
 
   PriceFeedWrapper internal priceFeedWrapper;
   MockPriceFeed internal stETHPriceFeed;
-  MockPriceFeed internal ethPriceFeed;
   MockStETH internal mockStETH;
 
   function setUp() external {
