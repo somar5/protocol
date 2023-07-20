@@ -495,28 +495,37 @@ contract DebtPreviewer is Initializable {
       if (marketDeposit == marketBorrow) {
         RewardRate[] memory rewards = rewardRates(marketDeposit);
         rates.rewards = new RewardRate[](rewards.length);
-        for (; i < rewards.length; ++i) {
+        for (; i < rewards.length; ) {
           rates.rewards[i].deposit = rewards[i].deposit.mulWadDown(targetRatio);
           rates.rewards[i].borrow = rewards[i].borrow.mulWadDown(targetRatio - 1e18);
           rates.rewards[i].asset = rewards[i].asset;
           rates.rewards[i].assetName = rewards[i].assetName;
           rates.rewards[i].assetSymbol = rewards[i].assetSymbol;
+          unchecked {
+            ++i;
+          }
         }
       } else {
         RewardRate[] memory depositRewards = rewardRates(marketDeposit);
         RewardRate[] memory borrowRewards = rewardRates(marketBorrow);
         rates.rewards = new RewardRate[](depositRewards.length + borrowRewards.length);
-        for (i = 0; i < depositRewards.length; ++i) {
+        for (i = 0; i < depositRewards.length; ) {
           rates.rewards[i].deposit = depositRewards[i].deposit.mulWadDown(targetRatio);
           rates.rewards[i].asset = depositRewards[i].asset;
           rates.rewards[i].assetName = depositRewards[i].assetName;
           rates.rewards[i].assetSymbol = depositRewards[i].assetSymbol;
+          unchecked {
+            ++i;
+          }
         }
-        for (i = 0; i < borrowRewards.length; ++i) {
+        for (i = 0; i < borrowRewards.length; ) {
           rates.rewards[i + depositRewards.length].borrow = borrowRewards[i].borrow.mulWadDown(targetRatio - 1e18);
           rates.rewards[i + depositRewards.length].asset = borrowRewards[i].asset;
           rates.rewards[i + depositRewards.length].assetName = borrowRewards[i].assetName;
           rates.rewards[i + depositRewards.length].assetSymbol = borrowRewards[i].assetSymbol;
+          unchecked {
+            ++i;
+          }
         }
       }
     }
