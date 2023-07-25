@@ -1,5 +1,13 @@
 # @exactly/protocol
 
+## 0.2.16
+
+### Patch Changes
+
+- a5c09dc: 🔧 deployments: set actual abi for each asset
+- b97131e: 🚀 optimism: deploy rewards permit upgrade
+- 2dcc3e7: ✨ rewards: allow claim with signature
+
 ## 0.2.15
 
 ### Patch Changes
